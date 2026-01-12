@@ -80,34 +80,98 @@ function sendAadhaarOTP() {
 
 
 function sendMobileOTP() {
-    const phone = document.getElementById("mobile").value.trim();
+    let phone = document.getElementById("mobile").value.trim();
 
-    fetch("/auth/login/mobile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone })
-    })
-        .then(r => r.json())
-        .then(d => {
-            showMsg(d.message, d.success ? "success" : "danger");
-            if (d.success) showOtp();
+    // Normalize phone (optional but recommended)
+    if (!phone.startsWith("+")) {
+        if (/^\d{10}$/.test(phone)) {
+            phone = "+91" + phone;
+            document.getElementById("mobile").value = phone;
+        } else {
+            showMsg("❌ Enter valid 10-digit mobile number", "danger");
+            return;
+        }
+    }
+
+    // 1️⃣ Fetch users from MockAPI
+    fetch("https://6964c650e8ce952ce1f2f83e.mockapi.io/login")
+        .then(res => res.json())
+        .then(users => {
+            // 2️⃣ Check mobile exists
+            const user = users.find(
+                u => String(u.phone).trim() === phone
+            );
+
+            if (!user) {
+                showMsg("❌ Mobile number not registered", "danger");
+                return;
+            }
+
+            // 3️⃣ Mobile exists → send OTP
+            fetch("/auth/login/mobile", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone })
+            })
+            .then(r => r.json())
+            .then(d => {
+                showMsg(d.message, "success");
+                showOtp();
+            })
+            .catch(() => {
+                showMsg("❌ Failed to send OTP", "danger");
+            });
+        })
+        .catch(() => {
+            showMsg("❌ Unable to check mobile records", "danger");
         });
 }
+
 
 function sendEmailOTP() {
     const email = document.getElementById("email").value.trim();
 
-    fetch("/auth/login/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-    })
-        .then(r => r.json())
-        .then(d => {
-            showMsg(d.message, d.success ? "success" : "danger");
-            if (d.success) showOtp();
+    // 1️⃣ Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMsg("❌ Enter a valid email address", "danger");
+        return;
+    }
+
+    // 2️⃣ Fetch users from MockAPI
+    fetch("https://6964c650e8ce952ce1f2f83e.mockapi.io/login")
+        .then(res => res.json())
+        .then(users => {
+            // 3️⃣ Check email exists
+            const user = users.find(
+                u => String(u.email).toLowerCase().trim() === email.toLowerCase()
+            );
+
+            if (!user) {
+                showMsg("❌ Email not registered", "danger");
+                return;
+            }
+
+            // 4️⃣ Email exists → send OTP
+            fetch("/auth/login/email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            })
+            .then(r => r.json())
+            .then(d => {
+                showMsg("✅ OTP sent to registered email", "success");
+                showOtp();
+            })
+            .catch(() => {
+                showMsg("❌ Failed to send OTP", "danger");
+            });
+        })
+        .catch(() => {
+            showMsg("❌ Unable to check email records", "danger");
         });
 }
+
 
 function verifyOTP() {
     fetch("/auth/verify-otp", {
