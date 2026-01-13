@@ -1,99 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <title>Login / Register</title>
+    <title>Register - Create Account</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
+<body>
+    <!-- Background particles -->
+    <div class="particle" style="width: 60px; height: 60px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 40px; height: 40px; top: 20%; right: 15%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 80px; height: 80px; bottom: 15%; left: 15%; animation-delay: 4s;"></div>
+    <div class="particle" style="width: 50px; height: 50px; bottom: 20%; right: 20%; animation-delay: 6s;"></div>
 
-  <body>
-    <div
-      class="container min-vh-100 d-flex align-items-center justify-content-center"
-    >
-      <div class="col-md-6 col-lg-5">
-        <div class="card p-4 shadow">
-          <h4 class="mb-3 text-center">Login / Register</h4>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="register-card">
+                    <!-- Logo -->
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h4>Create Account</h4>
+                        <p class="subtitle">Register to get started</p>
+                    </div>
 
-          <!-- Name -->
-          <div class="mb-3">
-            <label>Full Name</label>
-            <input class="form-control" id="name" />
-          </div>
+                    <!-- Full Name -->
+                    <div class="input-group-custom">
+                        <label>Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="name" 
+                                placeholder="Enter your full name"
+                                type="text"
+                            />
+                        </div>
+                    </div>
 
-          <!-- Email -->
-          <div class="mb-3">
-            <label>Email</label>
-            <input class="form-control" id="email" />
-          </div>
+                    <!-- Email -->
+                    <div class="input-group-custom">
+                        <label>Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="email" 
+                                placeholder="Enter your email"
+                                type="email"
+                            />
+                        </div>
+                    </div>
 
-          <!-- Mobile -->
-          <div class="mb-3">
-            <label>Mobile</label>
-            <input class="form-control" id="mobile" placeholder="+91..." />
-          </div>
+                    <!-- Mobile -->
+                    <div class="input-group-custom">
+                        <label>Mobile</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mobile-alt input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="mobile" 
+                                placeholder="+91 Enter mobile number"
+                                type="tel"
+                            />
+                        </div>
+                    </div>
 
-          <!-- Aadhaar -->
-          <div class="mb-3">
-            <label>Aadhaar</label>
-            <input class="form-control" id="aadhaar" maxlength="12" />
-          </div>
+                    <!-- Aadhaar -->
+                    <div class="input-group-custom">
+                        <label>Aadhaar</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="aadhaar" 
+                                maxlength="12"
+                                placeholder="Enter 12-digit Aadhaar"
+                                type="text"
+                            />
+                        </div>
+                    </div>
 
-          <!-- OTP METHOD -->
-          <div class="mb-3">
-            <label>Send OTP Via</label>
-            <select
-              class="form-select"
-              id="otpMethod"
-              onchange="toggleOtpMethod()"
-            >
-              <option value="">Select</option>
-              <option value="mobile">Mobile</option>
-              <option value="email">Email</option>
-            </select>
-          </div>
+                    <!-- OTP Method -->
+                    <div class="input-group-custom">
+                        <label>Send OTP Via</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-paper-plane input-icon"></i>
+                            <select 
+                                class="form-select-custom" 
+                                id="otpMethod" 
+                                onchange="toggleOtpMethod()"
+                            >
+                                <option value="">Select method</option>
+                                <option value="mobile">Mobile</option>
+                                <option value="email">Email</option>
+                            </select>
+                        </div>
+                    </div>
 
-          <!-- SEND OTP BUTTONS -->
-          <button
-            id="sendMobileOtpBtn"
-            class="btn btn-primary w-100 mb-2 d-none"
-            onclick="sendMobileOTP()"
-          >
-            Send OTP to Mobile
-          </button>
+                    <!-- Send OTP to Mobile Button -->
+                    <button
+                        id="sendMobileOtpBtn"
+                        class="btn-send-otp d-none"
+                        onclick="sendMobileOTP()"
+                    >
+                        <i class="fas fa-mobile-alt"></i> Send OTP to Mobile
+                    </button>
 
-          <button
-            id="sendEmailOtpBtn"
-            class="btn btn-warning w-100 mb-2 d-none"
-            onclick="sendEmailOTP()"
-          >
-            Send OTP to Email
-          </button>
+                    <!-- Send OTP to Email Button -->
+                    <button
+                        id="sendEmailOtpBtn"
+                        class="btn-send-otp btn-email d-none"
+                        onclick="sendEmailOTP()"
+                    >
+                        <i class="fas fa-envelope"></i> Send OTP to Email
+                    </button>
 
-          <!-- OTP BOX -->
-          <div id="otpBox" class="d-none">
-            <input class="form-control my-2" id="otp" placeholder="Enter OTP" />
-            <button class="btn btn-success w-100" onclick="verifyOTP()">
-              Verify OTP
-            </button>
-          </div>
+                    <!-- OTP Input Box -->
+                    <div id="otpBox" class="d-none">
+                        <div class="input-group-custom">
+                            <label>Enter OTP</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key input-icon"></i>
+                                <input 
+                                    class="form-control-custom" 
+                                    id="otp" 
+                                    placeholder="Enter 6-digit OTP"
+                                    maxlength="6"
+                                    type="text"
+                                />
+                            </div>
+                        </div>
+                        <button class="btn-send-otp btn-verify" onclick="verifyOTP()">
+                            <i class="fas fa-check-circle"></i> Verify OTP & Register
+                        </button>
+                    </div>
 
-          <p id="msg" class="text-center mt-3"></p>
+                    <!-- Message -->
+                    <div id="msg" class="d-none"></div>
 
-          <p class="text-center mt-3">
-            Have Account?
-            <a href="/register" class="fw-semibold text-decoration-none">
-              Login
-            </a>
-          </p>
+                    <!-- Login Link -->
+                    <div class="login-link">
+                        Have an account? <a href="/login">Login</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <script src="../static/script.js"></script>
-  </body>
+    <script src="../static/js/script.js"></script>
+</body>
 </html>

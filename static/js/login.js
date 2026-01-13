@@ -49,7 +49,7 @@ function sendAadhaarOTP() {
             console.log("Matched user:", user);
 
             // ✅ Send OTP to backend
-            fetch("/auth/send-mobile-otp", {
+            fetch("/auth/login/mobile", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

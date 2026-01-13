@@ -1,98 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <title>Login</title>
+    <title>Login - Secure Access</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+ <link rel="stylesheet" href="../static/css/login.css">
+</head>
 
-  <body>
-    <div
-      class="container min-vh-100 d-flex align-items-center justify-content-center"
-    >
-      <div class="col-md-5">
-        <div class="card p-4 shadow">
-          <h4 class="text-center mb-4">Login</h4>
+<body>
+    <!-- Background particles -->
+    <div class="particle" style="width: 60px; height: 60px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 40px; height: 40px; top: 20%; right: 15%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 80px; height: 80px; bottom: 15%; left: 15%; animation-delay: 4s;"></div>
+    <div class="particle" style="width: 50px; height: 50px; bottom: 20%; right: 20%; animation-delay: 6s;"></div>
 
-          <!-- LOGIN METHOD BUTTONS -->
-          <div class="d-flex gap-2 mb-3">
-            <button
-              class="btn btn-outline-primary w-100"
-              onclick="selectMethod('aadhaar')"
-            >
-              Aadhaar
-            </button>
-            <button
-              class="btn btn-outline-success w-100"
-              onclick="selectMethod('mobile')"
-            >
-              Mobile
-            </button>
-            <button
-              class="btn btn-outline-warning w-100"
-              onclick="selectMethod('email')"
-            >
-              Email
-            </button>
-          </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-card">
+                    <!-- Logo -->
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Welcome Back</h4>
+                        <p class="subtitle">Choose your preferred login method</p>
+                    </div>
 
-          <!-- Aadhaar -->
-          <div id="aadhaarBox" class="d-none mb-3">
-            <label>Aadhaar Number</label>
-            <input class="form-control" id="aadhaar" maxlength="12" />
-            <button
-              class="btn btn-primary w-100 mt-2"
-              onclick="sendAadhaarOTP()"
-            >
-              Send OTP
-            </button>
-          </div>
+                    <!-- Login Method Tabs -->
+                    <div class="method-tabs">
+                        <button class="method-btn active" onclick="selectMethod('aadhaar')">
+                            <i class="fas fa-id-card"></i>
+                            <span>Aadhaar</span>
+                        </button>
+                        <button class="method-btn" onclick="selectMethod('mobile')">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile</span>
+                        </button>
+                        <button class="method-btn" onclick="selectMethod('email')">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </button>
+                    </div>
 
-          <!-- Mobile -->
-          <div id="mobileBox" class="d-none mb-3">
-            <label>Mobile Number</label>
-            <input class="form-control" id="mobile" placeholder="+91..." />
-            <button
-              class="btn btn-success w-100 mt-2"
-              onclick="sendMobileOTP()"
-            >
-              Send OTP
-            </button>
-          </div>
+                    <!-- Aadhaar Input -->
+                    <div id="aadhaarBox" class="input-group-custom">
+                        <label>Aadhaar Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-id-card input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="aadhaar" 
+                                maxlength="12"
+                                placeholder="Enter 12-digit Aadhaar"
+                                type="text"
+                            />
+                        </div>
+                        <button class="btn-send-otp" onclick="sendAadhaarOTP()">
+                            <i class="fas fa-paper-plane"></i> Send OTP
+                        </button>
+                    </div>
 
-          <!-- Email -->
-          <div id="emailBox" class="d-none mb-3">
-            <label>Email</label>
-            <input class="form-control" id="email" />
-            <button class="btn btn-warning w-100 mt-2" onclick="sendEmailOTP()">
-              Send OTP
-            </button>
-          </div>
+                    <!-- Mobile Input -->
+                    <div id="mobileBox" class="input-group-custom d-none">
+                        <label>Mobile Number</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-mobile-alt input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="mobile" 
+                                placeholder="+91 Enter mobile number"
+                                type="tel"
+                            />
+                        </div>
+                        <button class="btn-send-otp" onclick="sendMobileOTP()">
+                            <i class="fas fa-paper-plane"></i> Send OTP
+                        </button>
+                    </div>
 
-          <!-- OTP -->
-          <div id="otpBox" class="d-none">
-            <input class="form-control my-2" id="otp" placeholder="Enter OTP" />
-            <button class="btn btn-dark w-100" onclick="verifyOTP()">
-              Verify OTP
-            </button>
-          </div>
+                    <!-- Email Input -->
+                    <div id="emailBox" class="input-group-custom d-none">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="email" 
+                                placeholder="Enter your email"
+                                type="email"
+                            />
+                        </div>
+                        <button class="btn-send-otp" onclick="sendEmailOTP()">
+                            <i class="fas fa-paper-plane"></i> Send OTP
+                        </button>
+                    </div>
 
-          <p id="msg" class="text-center mt-3"></p>
+                    <!-- OTP Input -->
+                    <div id="otpBox" class="input-group-custom d-none">
+                        <label>Enter OTP</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-key input-icon"></i>
+                            <input 
+                                class="form-control-custom" 
+                                id="otp" 
+                                placeholder="Enter 6-digit OTP"
+                                maxlength="6"
+                                type="text"
+                            />
+                        </div>
+                        <button class="btn-send-otp btn-verify" onclick="verifyOTP()">
+                            <i class="fas fa-check-circle"></i> Verify OTP
+                        </button>
+                    </div>
 
-          <p class="text-center mt-3">
-            New user?
-            <a href="/register" class="fw-semibold text-decoration-none">
-              Create an account
-            </a>
-          </p>
+                    <!-- Message -->
+                    <div id="msg" class="d-none"></div>
+
+                    <!-- Register Link -->
+                    <div class="register-link">
+                        New user? <a href="/register">Create an account</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <script src="../static/login.js"></script>
-  </body>
+    <script src="../static/js/login.js"></script>
+</body>
 </html>

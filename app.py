@@ -83,6 +83,44 @@ def register():
 def home():
     return render_template("home.html")
 
+@app.route("/auth/send-mobile-otp", methods=["POST"])
+def send_mobile_otp():
+    data = request.json
+    phone = data.get("phone")
+
+    if not phone:
+        return jsonify({
+            "success": False,
+            "message": "Mobile number is required"
+        }), 400
+
+    url = f"{MOCKAPI_BASE_URL}/login"
+    users = requests.get(url).json()
+
+    # ❌ If already registered → error
+    if any(u.get("phone") == phone for u in users):
+        return jsonify({
+            "success": False,
+            "message": "Mobile number already registered"
+        }), 409
+
+    # ✅ Create TEMP user (NOT saved)
+    temp_user = {
+        "name": data.get("name"),
+        "email": data.get("email"),
+        "phone": phone,
+        "aadhaar": data.get("aadhaar")
+    }
+
+    # Generate & store OTP with temp user
+    otp = save_otp(phone, temp_user)
+    send_sms(phone, otp)
+
+    return jsonify({
+        "success": True,
+        "message": "OTP sent to mobile"
+    })
+
 # ---------------------------
 # Login Routes
 # ---------------------------
@@ -101,7 +139,7 @@ def login_aadhaar():
 
     return jsonify({"success": True, "message": "OTP sent to registered mobile"})
 
-
+#login send mobile otp
 @app.route("/auth/login/mobile", methods=["POST"])
 def login_mobile():
     phone = request.json.get("phone")
@@ -117,6 +155,46 @@ def login_mobile():
 
     return jsonify({"success": True, "message": "OTP sent to mobile"})
 
+@app.route("/auth/send-email-otp", methods=["POST"])
+def send_email_otp():
+    data = request.json
+    email = data.get("email")
+
+    if not email:
+        return jsonify({
+            "success": False,
+            "message": "Email is required"
+        }), 400
+
+    url = f"{MOCKAPI_BASE_URL}/login"
+    users = requests.get(url).json()
+
+    # ❌ If already registered → error
+    if any(u.get("email") == email for u in users):
+        return jsonify({
+            "success": False,
+            "message": "Email already registered"
+        }), 409
+
+    # ✅ TEMP user (NOT saved yet)
+    temp_user = {
+        "name": data.get("name"),
+        "email": email,
+        "phone": data.get("phone"),
+        "aadhaar": data.get("aadhaar")
+    }
+
+    # Generate & store OTP with temp user
+    otp = save_otp(email, temp_user)
+    send_email(email, otp)
+
+    return jsonify({
+        "success": True,
+        "message": "OTP sent to email"
+    })
+
+
+#login email sendOtp
 
 @app.route("/auth/login/email", methods=["POST"])
 def login_email():
@@ -140,24 +218,44 @@ def login_email():
 def verify_otp():
     otp = request.json.get("otp")
 
+    if not otp:
+        return jsonify({
+            "success": False,
+            "message": "OTP is required"
+        }), 400
+
     for key, record in list(otp_store.items()):
         if record["otp"] == otp:
+
+            # ❌ Expired
             if time.time() > record["expires"]:
                 otp_store.pop(key)
-                return jsonify({"success": False, "message": "OTP expired"})
+                return jsonify({
+                    "success": False,
+                    "message": "OTP expired"
+                })
 
             user = record["user"]
 
-            # Save to MockAPI if not exists
+            # ✅ Save to MockAPI AFTER verification
             url = f"{MOCKAPI_BASE_URL}/login"
             users = requests.get(url).json()
-            if not any(u["phone"] == user["phone"] for u in users):
+
+            if not any(u.get("phone") == user["phone"] for u in users):
                 user = requests.post(url, json=user).json()
 
             otp_store.pop(key)
-            return jsonify({"success": True, "user": user})
 
-    return jsonify({"success": False, "message": "Invalid OTP"})
+            return jsonify({
+                "success": True,
+                "message": "OTP verified successfully",
+                "user": user
+            })
+
+    return jsonify({
+        "success": False,
+        "message": "Invalid OTP"
+    })
 
 # ---------------------------
 # Run App
